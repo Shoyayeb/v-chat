@@ -4,11 +4,10 @@ import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import { styled, useTheme } from '@mui/material/styles';
-import { Divider, List, ListItem, ListItemIcon, Typography } from '@mui/material';
+import { List, ListItem, ListItemIcon, Typography } from '@mui/material';
 import { SupervisedUserCircle, VerifiedUser } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -67,7 +66,7 @@ const SideBar = ({ handleDrawerClose, open, drawerWidth }) => {
             </DrawerHeader>
             <List>
                 {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem button key={text}>
+                    <ListItem component={Link} to={`/${text}`} key={text}>
                         <ListItemIcon>
                             {index % 2 === 0 ? <VerifiedUser /> : <SupervisedUserCircle />}
                         </ListItemIcon>
