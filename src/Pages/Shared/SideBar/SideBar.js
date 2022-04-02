@@ -6,14 +6,14 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItemText from '@mui/material/ListItemText';
 import { styled, useTheme } from '@mui/material/styles';
 import { List, ListItem, ListItemIcon, Typography } from '@mui/material';
-import { SupervisedUserCircle, VerifiedUser } from '@mui/icons-material';
+import { Logout, SupervisedUserCircle, VerifiedUser } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
 }));
-const SideBar = ({ handleDrawerClose, open, drawerWidth }) => {
+const SideBar = ({ handleDrawerClose, open, drawerWidth, handleLogOut }) => {
     const theme = useTheme();
 
     return (
@@ -73,6 +73,12 @@ const SideBar = ({ handleDrawerClose, open, drawerWidth }) => {
                         <ListItemText primary={text} />
                     </ListItem>
                 ))}
+                <ListItem component='button' onClick={handleLogOut}>
+                    <ListItemIcon>
+                        <Logout />
+                    </ListItemIcon>
+                    <ListItemText>Log Out</ListItemText>
+                </ListItem>
             </List>
         </Drawer>
     );

@@ -9,7 +9,7 @@ import { Avatar } from '@mui/material';
 import { Box } from '@mui/system';
 
 
-const TopBar = ({ handleDrawerOpen, open, drawerWidth }) => {
+const TopBar = ({ user, handleDrawerOpen, open, drawerWidth }) => {
     const AppBar = styled(MuiAppBar, {
         shouldForwardProp: (prop) => prop !== 'open',
     })(({ theme, open }) => ({
@@ -39,11 +39,11 @@ const TopBar = ({ handleDrawerOpen, open, drawerWidth }) => {
                     <MenuIcon />
                 </IconButton>
                 <IconButton sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                    <Avatar alt={user.name} src="/static/images/avatar/2.jpg" />
                 </IconButton>
                 <Box sx={{ mx: 3 }} component="div">
-                    <Typography variant="h6" noWrap fontWeight="bold">Name</Typography>
-                    <Typography fontWeight="medium" noWrap>0146854335</Typography>
+                    <Typography variant="h6" noWrap fontWeight="bold">{user.name}</Typography>
+                    <Typography fontWeight="medium" noWrap>{user.mobile}</Typography>
                 </Box>
             </Toolbar>
         </AppBar>
