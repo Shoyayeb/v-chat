@@ -1,12 +1,12 @@
-import React from 'react';
-import { styled } from '@mui/material/styles';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Avatar } from '@mui/material';
+import MuiAppBar from '@mui/material/AppBar';
+import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
+import React from 'react';
 
 
 const TopBar = ({ user, handleDrawerOpen, open, drawerWidth }) => {
@@ -27,7 +27,7 @@ const TopBar = ({ user, handleDrawerOpen, open, drawerWidth }) => {
         }),
     }));
     return (
-        <AppBar position="fixed" open={open} sx={{ backgroundColor: "white", color: "black" }}>
+        <AppBar position="" open={open} sx={{ backgroundColor: "white", color: "black" }}>
             <Toolbar>
                 <IconButton
                     color="inherit"

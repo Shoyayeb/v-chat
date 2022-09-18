@@ -1,12 +1,12 @@
-import React from 'react';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
+import { Logout, SupervisedUserCircle, VerifiedUser } from '@mui/icons-material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { List, ListItem, ListItemIcon, Typography } from '@mui/material';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 import { styled, useTheme } from '@mui/material/styles';
-import { List, ListItem, ListItemIcon, Typography } from '@mui/material';
-import { Logout, SupervisedUserCircle, VerifiedUser } from '@mui/icons-material';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -19,7 +19,7 @@ const SideBar = ({ handleDrawerClose, open, drawerWidth, handleLogOut }) => {
     return (
         <Drawer
             sx={{
-                width: drawerWidth,
+                width: 50,
                 flexShrink: 0,
                 '& .MuiDrawer-paper': {
                     width: drawerWidth,

@@ -1,12 +1,12 @@
-import SideBar from "./Pages/Shared/SideBar/SideBar";
-import TopBar from "./Pages/Shared/TopBar/TopBar";
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
+import axios from "axios";
 import { useEffect, useState } from "react";
-import Login from './Pages/Login/Login';
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import Chats from './Pages/Chats/Chats';
-import axios from "axios";
+import Login from './Pages/Login/Login';
+import SideBar from "./Pages/Shared/SideBar/SideBar";
+import TopBar from './Pages/Shared/TopBar/TopBar';
 
 const drawerWidth = 350;
 
