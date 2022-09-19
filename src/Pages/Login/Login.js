@@ -1,38 +1,18 @@
-import styled from '@emotion/styled';
-import { Button, Paper, TextField, Typography } from '@mui/material';
-import { Box } from '@mui/system';
 import React from 'react';
 
 const Login = ({ token, setToken, handleLogin }) => {
 
-    const GenerateButton = styled(Button)(({ theme }) => ({
-        color: "white",
-        textTransform: 'none',
-        backgroundColor: "#21978B",
-        '&:hover': {
-            backgroundColor: "#21978B",
-        },
-    }));
-
     return (
-        <Paper sx={{ display: "flex", flexDirection: { md: "row", xs: "column" }, width: "100%", height: "100vh", m: 0 }} style={{ background: "#E9E9E9" }}>
-            {/* <SideBar /> */}
-            <Box sx={{ my: "auto", ml: { md: 20, xs: 5 }, width: 3 / 4, display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                <Typography sx={{ fontWeight: 'bold', mx: 0, fontFamily: "Inter" }} variant="h4">Enter Your Token</Typography>
-                <TextField
-                    value={token}
-                    onChange={(e) => setToken(e.target.value)}
-                    sx={{ width: 3 / 4, my: 3, backgroundColor: "#ffff", border: 1, borderRadius: 1, borderColor: "#11cb5f" }}
-                    size="small"
-                    variant='outlined'
-                    aria-readonly
-                    color="success"
-                />
-                <GenerateButton variant="contained" sx={{ display: "flex", flexDirection: "column", fontFamily: "Inter", borderRadius: 10, px: 4 }} color="success" className='generateButton' onClick={handleLogin}>
-                    Login
-                </GenerateButton>
-            </Box>
-        </Paper>
+        <div className=' mt-32 flex flex-col items-center'>
+            <form className='w-9/12 md:w-5/12 flex flex-col items-center gap-5' onSubmit={(e) => {
+                e.preventDefault();
+                handleLogin(token);
+            }}>
+                <input type="text" className=' w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm my-5' value={token} onChange={(e) => setToken(e.target.value)} />
+                <button className=' rounded-md border border-transparent bg-indigo-600 px-5 py-3 text-base font-medium text-white hover:bg-indigo-700 w-2/6 mx-auto'>Login</button>
+            </form>
+        </div>
+
     );
 };
 

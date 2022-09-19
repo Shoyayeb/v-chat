@@ -1,12 +1,9 @@
-import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import Chats from './Pages/Chats/Chats';
 import Login from './Pages/Login/Login';
-import SideBar from "./Pages/Shared/SideBar/SideBar";
-import TopBar from './Pages/Shared/TopBar/TopBar';
+import TopBar from "./Pages/Shared/TopBar/TopBar";
 
 const drawerWidth = 350;
 
@@ -23,6 +20,7 @@ function App() {
       if (data.data.name) {
         setUser(data.data);
         setLoggedIn(true);
+        console.log(user);
         sessionStorage.setItem('token', token);
       } else {
         setError(data.data);
@@ -51,35 +49,28 @@ function App() {
     }
   }, []);
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
 
   return (
     <Router>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <SideBar handleDrawerClose={handleDrawerClose} open={open} drawerWidth={drawerWidth} handleLogOut={handleLogOut} />
-        {loggedIn && <TopBar user={user} handleDrawerOpen={handleDrawerOpen} open={open} drawerWidth={drawerWidth} />}
+      <div>
+        {loggedIn && <TopBar user={user} handleLogOut={handleLogOut} />}
+        <div className="mx-5">
+          <Routes>
+            {loggedIn && (
+              <>
+                <Route path="/" element={<Chats open={open} drawerWidth={drawerWidth} />} />
+                <Route path="/home" element={<Chats open={open} drawerWidth={drawerWidth} />} />
+                <Route path="/chats:chatId" element={<Chats open={open} drawerWidth={drawerWidth} />} />
+              </>
+            )}
+            {!loggedIn && (
+              <Route path="/signin" element={<Login error={error} setLoggedIn={setLoggedIn} setUser={setUser} handleLogin={handleLogin} token={token} setToken={setToken} />} />
+            )}
+            <Route path="*" element={<Navigate to={loggedIn ? "/home" : "/signin"} />} />
+          </Routes>
+        </div>
 
-        <Routes>
-          {loggedIn && (
-            <>
-              <Route path="/" element={<Chats open={open} drawerWidth={drawerWidth} />} />
-              <Route path="/home" element={<Chats open={open} drawerWidth={drawerWidth} />} />
-              <Route path="/chats:chatId" element={<Chats open={open} drawerWidth={drawerWidth} />} />
-            </>
-          )}
-          {!loggedIn && (
-            <Route path="/signin" element={<Login error={error} setLoggedIn={setLoggedIn} setUser={setUser} handleLogin={handleLogin} token={token} setToken={setToken} />} />
-          )}
-          <Route path="*" element={<Navigate to={loggedIn ? "/home" : "/signin"} />} />
-        </Routes>
-      </Box>
+      </div>
     </Router>
   );
 }

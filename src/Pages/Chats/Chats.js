@@ -1,19 +1,18 @@
 
-import { Box, Paper } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 
-const Chats = (drawerWidth, open) => {
+const Chats = () => {
 
+    const [message, setMessage] = useState('');
     return (
-        <Paper sx={{ display: "flex", flexDirection: { md: "row", xs: "column" }, width: "100%", height: "100vh", ml: drawerWidth }} style={{ background: "#E9E9E9" }}>
-            <Box sx={{ my: "auto", ml: { md: 20, xs: 5 }, width: 3 / 4, display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                <input type="text" />
-                <button>Send Message</button>
-                <div>
-                    <h1>Message</h1>
-                </div>
-            </Box>
-        </Paper>
+        <div className='absolute bottom-5 right-0 w-full'>
+            <form className='flex items-center gap-4 mx-auto' onSubmit={(e) => {
+                e.preventDefault();
+            }}>
+                <input type="text" className=' w-10/12 rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm' value={message} onChange={(e) => setMessage(e.target.value)} />
+                <button className=' rounded-md border border-transparent bg-indigo-600 px-4 py-2 sm:text-sm font-medium text-white hover:bg-indigo-700 w-2/12 mx-auto'>Send</button>
+            </form>
+        </div>
     );
 };
 
