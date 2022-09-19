@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Login = ({ token, setToken, handleLogin }) => {
+const LoginRegister = ({ token, setToken, handleLogin }) => {
 
     return (
         <div className=' mt-32 flex flex-col items-center'>
@@ -16,4 +16,4 @@ const Login = ({ token, setToken, handleLogin }) => {
     );
 };
 
-export default Login;
+export default LoginRegister;
