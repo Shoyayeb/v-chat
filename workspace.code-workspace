@@ -5,9 +5,6 @@
 		},
 		{
 			"path": "..\\v-chat-backend"
-		},
-		{
-			"path": "../v-chat-token-generator"
 		}
 	],
 	"settings": {}

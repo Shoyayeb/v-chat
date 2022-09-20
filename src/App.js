@@ -11,8 +11,8 @@ function App() {
 
   return (
     <Router>
-      {user?.uid ? <TopBar /> : ''}
-      <div className="mx-5">
+      <div className="mx-5 ">
+        {user?.uid ? <TopBar /> : ''}
         <Routes>
           {user.uid ? <>
             <Route path="/" element={<Chats />} />
@@ -21,7 +21,7 @@ function App() {
           </> : <Route path="/signin" element={<Login />} />}
           <Route path="*" element={<Navigate to={user.uid ? "/chat" : "/signin"} />} />
         </Routes>
-        <SendBar />
+        {user?.uid ? <SendBar /> : ''}
       </div>
     </Router>
   );

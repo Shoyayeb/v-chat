@@ -1,7 +1,9 @@
 import { PhotoIcon } from '@heroicons/react/24/outline';
 import React, { useState } from 'react';
 import { IoSend } from "react-icons/io5";
+import useAuth from './../../../Hooks/useAuth';
 const SendBar = () => {
+    const { sendMessage } = useAuth();
     const [message, setMessage] = useState('');
 
     // className=' w-10/12 rounded-md border-gray-300  pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-0'
@@ -11,6 +13,9 @@ const SendBar = () => {
             <form className='mx-7' onSubmit={(e) => {
                 e.preventDefault();
                 console.log(message);
+                if (message) {
+                    sendMessage(message);
+                }
             }}>
                 <div className='relative flex'>
                     <input onChange={(e) => { setMessage(e.target.value) }} type="text" className="text-gray-600 focus:outline-none focus:border focus:border-indigo-700  bg-white font-normal h-10 flex items-center pl-12 text-sm  border shadow w-5/6 rounded-md border-gray-300  pr-16  focus:ring-indigo-500 sm:text-sm py-0" placeholder="Enter Your Message " />
@@ -19,7 +24,7 @@ const SendBar = () => {
                         <PhotoIcon className='icon icon-tabler icon-tabler-mail' width={18} height={18} />
                     </label>
                     {/* <button className='absolute right-0 rounded-md border border-transparent bg-indigo-600 px-4 py-2 sm:text-sm font-medium text-white hover:bg-indigo-700 w-2/12'> </button> */}
-                    <button className='absolute right-0 '><IoSend className=' icon icon-tabler icon-tabler-mail rounded-full hover:bg-indigo-100 text-indigo-500 w-10 h-10 p-1' width={18} height={18} onClick={() => { window.alert(message) }} /></button>
+                    <button className='absolute right-0 '><IoSend className=' icon icon-tabler icon-tabler-mail rounded-full hover:bg-indigo-100 text-indigo-500 w-10 h-10 p-1' width={18} height={18} /></button>
 
                 </div>
             </form>

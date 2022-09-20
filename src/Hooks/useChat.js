@@ -1,8 +1,9 @@
 import { getAuth, onAuthStateChanged, RecaptchaVerifier, signInWithPhoneNumber, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 import initializeFirebase from './../Firebase/firebase.init';
 
-
+const socket = io.connect("http://localhost:4000");
 initializeFirebase();
 
 const useChat = () => {
@@ -12,6 +13,20 @@ const useChat = () => {
     const [pass, setPass] = useState('');
     const [loginLoader, setLoginLoader] = useState(false);
     const [otpSuccess, setOtpSuccess] = useState(false);
+    const [messages, setMessages] = useState([]);
+
+    const sendMessage = (message) => {
+        socket.emit("send_message", { message, uid: user.uid });
+        setMessages([...messages, { message, uid: user.uid }]);
+        console.log(messages);
+    }
+
+    useEffect(() => {
+        socket.on("recieve_message", (data) => {
+            setMessages([...messages, { message: data.message, uid: data.uid, id: data.id }]);
+            console.log(messages);
+        });
+    }, [socket]);
 
     let appVerifier = window.recaptchaVerifier;
 
@@ -101,7 +116,8 @@ const useChat = () => {
         verifyOTP,
         loginLoader,
         otpSuccess,
-        handleLogOut
+        handleLogOut,
+        sendMessage, messages
     }
 };
 

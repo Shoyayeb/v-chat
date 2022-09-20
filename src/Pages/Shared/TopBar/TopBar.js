@@ -11,7 +11,7 @@ const TopBar = () => {
     return (
         <Popover className="relative bg-white">
             <div className="mx-auto max-w-7xl px-4 sm:px-6">
-                <div className="flex items-center justify-between border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
+                <div className="flex items-center justify-between border-b-2 border-gray-100 py-4 md:justify-start md:space-x-10">
                     <div className="flex justify-start lg:w-0 lg:flex-1">
                         <a href="#">
                             <span className="sr-only">Your Company</span>
@@ -28,9 +28,9 @@ const TopBar = () => {
                             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                         </Popover.Button>
                     </div>
-                    <div >
-                        <p className=''>{user.displayName ? user.displayName : user.uid}</p>
-                        <p className='font-bold'>{user.phoneNumber}</p>
+                    <div className='hidden md:block'>
+                        <p className='break-words'>{user.displayName ? user.displayName : user.uid}</p>
+                        <p className='font-bold break-words'>{user.phoneNumber}</p>
                     </div>
                     <button className="hidden md:inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm" onClick={handleLogOut}>Log Out</button>
                 </div>
@@ -63,14 +63,13 @@ const TopBar = () => {
                                     </Popover.Button>
                                 </div>
                             </div>
-                            <div className="mt-6">
-                                <nav className="grid gap-y-8">
-                                    solutions
-                                </nav>
+                            <div className=''>
+                                <p className='break-words'>{user.displayName ? user.displayName : user.uid}</p>
+                                <p className='font-bold break-words'>{user.phoneNumber}</p>
                             </div>
                         </div>
                         <div className="space-y-6 py-6 px-5">
-                            <div className="grid grid-cols-2 gap-y-4 gap-x-8">
+                            {/* <div className="grid grid-cols-2 gap-y-4 gap-x-8">
                                 <a href="#" className="text-base font-medium text-gray-900 hover:text-gray-700">
                                     Pricing
                                 </a>
@@ -79,7 +78,7 @@ const TopBar = () => {
                                     Docs
                                 </a>
                                 resources
-                            </div>
+                            </div> */}
                             <button className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm" onClick={handleLogOut}>Log Out</button>
                         </div>
                     </div>
