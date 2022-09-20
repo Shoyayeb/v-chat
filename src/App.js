@@ -1,28 +1,27 @@
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
-
 import useAuth from './Hooks/useAuth';
 import Chats from './Pages/Chats/Chats';
 import Login from './Pages/LoginRegister/LoginRegister';
+import SendBar from './Pages/Shared/SendBar/SendBar';
 import TopBar from "./Pages/Shared/TopBar/TopBar";
 
-const drawerWidth = 350;
 
 function App() {
   const { user } = useAuth();
 
   return (
     <Router>
-      <TopBar />
+      {user?.uid ? <TopBar /> : ''}
       <div className="mx-5">
         <Routes>
-            <>
-              <Route path="/" element={<Chats drawerWidth={drawerWidth} />} />
-              <Route path="/home" element={<Chats drawerWidth={drawerWidth} />} />
-              <Route path="/chats:chatId" element={<Chats drawerWidth={drawerWidth} />} />
-            </>
-          <Route path="/signin" element={<Login />} />
-          <Route path="*" element={<Navigate to={user ? "/home" : "/signin"} />} />
+          {user.uid ? <>
+            <Route path="/" element={<Chats />} />
+            <Route path="/home" element={<Chats />} />
+            <Route path="/chat" element={<Chats />} />
+          </> : <Route path="/signin" element={<Login />} />}
+          <Route path="*" element={<Navigate to={user.uid ? "/chat" : "/signin"} />} />
         </Routes>
+        <SendBar />
       </div>
     </Router>
   );

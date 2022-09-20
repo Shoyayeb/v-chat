@@ -1,4 +1,4 @@
-import { getAuth, onAuthStateChanged, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { getAuth, onAuthStateChanged, RecaptchaVerifier, signInWithPhoneNumber, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
 import initializeFirebase from './../Firebase/firebase.init';
 
@@ -62,7 +62,7 @@ const useChat = () => {
                 window.confirmationResult = confirmationResult;
                 setOtpSuccess(true);
                 setLoginLoader(false);
-                // ...
+
             }).catch((error) => {
                 console.log(error);
                 setOtpSuccess(false);
@@ -73,25 +73,28 @@ const useChat = () => {
     }
 
     useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is signed in, see docs for a list of available properties
-                // https://firebase.google.com/docs/reference/js/firebase.User
-                const uid = user.uid;
                 setUser(user);
-                // ...
+                console.log(user);
             } else {
-                setUser({})
-                // User is signed out
-                // ...
+                setUser({});
+                console.log(user);
             }
         });
-    }, [user]);
+        return () => unsubscribe;
+    }, [auth]);
+
+
     const handleLogOut = () => {
-        console.log("logged out");
+        signOut(auth)
+            .then(() => {
+                console.log("Sign out success");
+            })
     }
 
     return {
+        user,
         createPhoneUser,
         pass,
         setPass,
