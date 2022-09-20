@@ -3,15 +3,11 @@ import {
     Bars3Icon, XMarkIcon
 } from '@heroicons/react/24/outline';
 import React, { Fragment } from 'react';
+import useAuth from './../../../Hooks/useAuth';
 
-
-function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
-}
-
-const TopBar = ({ user, handleLogOut }) => {
-
-
+const TopBar = () => {
+    const { user, handleLogOut } = useAuth();
+    console.log(user);
     return (
         <Popover className="relative bg-white">
             <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -34,8 +30,8 @@ const TopBar = ({ user, handleLogOut }) => {
                     </div>
 
                     <div >
-                        <p className=''>{user.name}</p>
-                        <p className='font-bold'>{user.mobile}</p>
+                        <p className=''>{user}</p>
+                        <p className='font-bold'>{user}</p>
                     </div>
 
                     {user ? <button className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm" onClick={handleLogOut}>Log Out</button> : <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
