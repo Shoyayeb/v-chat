@@ -2,11 +2,12 @@ import { Popover, Transition } from '@headlessui/react';
 import {
     Bars3Icon, XMarkIcon
 } from '@heroicons/react/24/outline';
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import useAuth from './../../../Hooks/useAuth';
 
 const TopBar = () => {
     const { user, handleLogOut } = useAuth();
+    const [nameModal, setNameModal] = useState(false);
     console.log(user);
     return (
         <Popover className="relative bg-white">

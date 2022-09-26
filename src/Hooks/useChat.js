@@ -1,3 +1,4 @@
+import axios from "axios";
 import { getAuth, onAuthStateChanged, RecaptchaVerifier, signInWithPhoneNumber, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
@@ -38,20 +39,47 @@ const useChat = () => {
                 // reCAPTCHA solved, allow signInWithPhoneNumber.
             }
         }, auth);
+    };
+
+    async function uploadPfp(file) {
+        // const formData = new FormData();
+        // formData.append("file", file, "image.png");
+        // console.log(formData);
+        await axios.post(`https://up.flickr.com/services/upload?key=5b8f4511642476d70199940f0f1373b5`, file).then((res) => {
+            console.log(res);
+        }).catch((err) => {
+            console.log(err);
+        })
+    };
+
+
+
+    const updateProfile = (newName) => {
+
+        updateProfile(auth.currentUser, {
+            displayName: newName, photoURL: "https://example.com/jane-q-user/profile.jpg"
+        }).then(() => {
+            // Profile updated!
+            // ...
+        }).catch((error) => {
+            // An error occurred
+            // ...
+        });
     }
 
     const verifyOTP = (pass) => {
         setLoginLoader(true);
+
         if (pass.length === 6) {
             console.log(pass);
             let confirmationResult = window.confirmationResult;
             confirmationResult.confirm(pass).then((result) => {
                 // User signed in successfully.
-                setUser(result.user)
+                setUser(result.user);
                 setOtpSuccess(true);
                 setLoginLoader(false);
                 console.log(result);
-                // ...
+
             }).catch((error) => {
                 console.log(error);
                 setOtpSuccess(false);
@@ -59,7 +87,7 @@ const useChat = () => {
                 // User couldn't sign in (bad verification code?)
                 // ...
             });
-        } else console.log(`code not ok- ${pass}`);
+        } else alert(`code not ok- ${pass}`);
     }
 
     const createPhoneUser = (phoneNumber) => {
@@ -117,7 +145,7 @@ const useChat = () => {
         loginLoader,
         otpSuccess,
         handleLogOut,
-        sendMessage, messages
+        sendMessage, messages, uploadPfp
     }
 };
 

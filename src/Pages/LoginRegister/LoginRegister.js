@@ -1,11 +1,23 @@
 import React, { useState } from 'react';
 import { BsArrowRightCircle } from "react-icons/bs";
 import { FiLoader } from "react-icons/fi";
+import { Navigate, useLocation } from 'react-router-dom';
 import useAuth from './../../Hooks/useAuth';
+
 const LoginRegister = () => {
-    const { createPhoneUser, pass, setPass, loginLoader, otpSuccess, verifyOTP } = useAuth();
+    const { user, createPhoneUser, pass, setPass, loginLoader, otpSuccess, verifyOTP, uploadPfp } = useAuth();
     const [phone, setPhone] = useState('');
-    let loadingButton = <div></div>
+    let location = useLocation();
+    if (user.uid) {
+        return (
+            <Navigate
+                to={{
+                    pathname: "/",
+                    state: { from: location }
+                }}
+            />)
+    }
+    let loadingButton = <div></div>;
     if (loginLoader && !otpSuccess) {
         loadingButton = <FiLoader className='icon icon-tabler icon-tabler-mail animate-spin absolute right-0 flex items-center p-1 mx-1 text-2xl z-10 rounded-full' width={18} height={18} />
     } else {
@@ -78,21 +90,40 @@ const LoginRegister = () => {
                             placeholder="OTP"
                         />
                         {loginLoader ?
-                            <FiLoader className='icon icon-tabler icon-tabler-mail animate-spin absolute right-0 flex items-center p-1 mx-1 text-2xl z-10 rounded-full' width={18} height={18} /> : <button className='absolute right-0 flex items-center p-1 mx-1 text-2xl z-10 rounded-full' onClick={() => verifyOTP(pass)}><BsArrowRightCircle className='icon icon-tabler icon-tabler-mail ' width={18} height={18} /></button>}
+                            <FiLoader className='icon icon-tabler icon-tabler-mail animate-spin absolute right-0 flex items-center p-1 mx-1 text-2xl z-10 rounded-full' width={18} height={18} /> : <button className='absolute right-0 flex items-center p-1 mx-1 text-2xl z-10 rounded-full' onClick={() => verifyOTP(pass).then(() => {
+                                if (user?.displayName === null) {
+                                    <Navigate
+                                        to={{
+                                            pathname: "/editprofile",
+                                            state: { from: location }
+                                        }}
+                                    />
+                                }
+                            })}><BsArrowRightCircle className='icon icon-tabler icon-tabler-mail ' width={18} height={18} /></button>}
                     </div>
                 </form> : ''}
-            </div>
+                <form class="flex items-center space-x-6 my-8" enctype="multipart/form-data" onSubmit={(e) => {
+                    e.preventDefault();
+                }}>
+                    <div class="shrink-0">
+                        <img class="h-16 w-16 object-cover rounded-full" src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1361&q=80" alt="Current profile " />
+                    </div>
+                    <label class="block">
+                        <span class="sr-only">Choose profile photo</span>
+                        <input type="file" id='file' name='file' class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100" onChange={(e) => {
+                            let file = e.target.files[0];
+                            var reader = new FileReader();
+                            reader.onloadend = function () {
+                                console.log('RESULT', reader.result);
+                                uploadPfp(reader.result);
+                            }
+                            reader.readAsDataURL(file)
+                            // const encodedString = Buffer.from(formData).toString('base64');
+                            // console.log(encodedString);
 
-            <div className="flex items-center justify-center">
-                <input
-                    id="remember-me"
-                    name="remember-me"
-                    type="checkbox"
-                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-base font-medium text-gray-900">
-                    Remember me
-                </label>
+                        }} />
+                    </label>
+                </form>
             </div>
         </div >
 
