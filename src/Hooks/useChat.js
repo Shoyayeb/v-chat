@@ -1,11 +1,14 @@
+import { getFirestore } from "@firebase/firestore";
 import axios from "axios";
 import { getAuth, onAuthStateChanged, RecaptchaVerifier, signInWithPhoneNumber, signOut } from "firebase/auth";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import initializeFirebase from './../Firebase/firebase.init';
 
 const socket = io.connect("http://localhost:4000");
 initializeFirebase();
+const db = getFirestore(initializeFirebase);
 
 const useChat = () => {
     const auth = getAuth();
@@ -15,8 +18,20 @@ const useChat = () => {
     const [loginLoader, setLoginLoader] = useState(false);
     const [otpSuccess, setOtpSuccess] = useState(false);
     const [messages, setMessages] = useState([]);
+    const chatsCollectionRef = collection(db, "chats");
 
-    const sendMessage = (message) => {
+    const sendMessage = async (message) => {
+        const time = new Date();
+        // await setDoc(chatsCollectionRef, {
+        //     message,
+        //     time,
+        //     uid: user.uid
+        // });
+        await addDoc(collection(db, "chats"), {
+            message,
+            time,
+            uid: user.uid,
+        });
         socket.emit("send_message", { message, uid: user.uid });
         setMessages([...messages, { message, uid: user.uid }]);
         console.log(messages);
@@ -52,40 +67,23 @@ const useChat = () => {
         })
     };
 
-
-
-    const updateProfile = (newName) => {
-
-        updateProfile(auth.currentUser, {
-            displayName: newName, photoURL: "https://example.com/jane-q-user/profile.jpg"
-        }).then(() => {
-            // Profile updated!
-            // ...
-        }).catch((error) => {
-            // An error occurred
-            // ...
-        });
-    }
-
     const verifyOTP = (pass) => {
-        setLoginLoader(true);
-
         if (pass.length === 6) {
             console.log(pass);
             let confirmationResult = window.confirmationResult;
-            confirmationResult.confirm(pass).then((result) => {
+            confirmationResult.confirm(pass).then(async (result) => {
                 // User signed in successfully.
                 setUser(result.user);
-                setOtpSuccess(true);
-                setLoginLoader(false);
+                await setDoc(doc(db, "users", result.user.uid), {
+                    uid: result.user.uid,
+                    phone: result.user.phoneNumber,
+                    name: result.user.displayName ? result.user.displayName : result.user.phoneNumber,
+                    photoURL: result.user.photoURL ? result.user.photoURL : "https://www.kindpng.com/picc/b/24-248253_user-profile-png.png"
+                });
                 console.log(result);
 
             }).catch((error) => {
-                console.log(error);
-                setOtpSuccess(false);
-                setLoginLoader(false);
-                // User couldn't sign in (bad verification code?)
-                // ...
+                alert(error);
             });
         } else alert(`code not ok- ${pass}`);
     }
@@ -93,11 +91,9 @@ const useChat = () => {
     const createPhoneUser = (phoneNumber) => {
         console.log(phoneNumber);
         setLoginLoader(true);
-        // if (phoneNumber.length === 11) {
-        //     console.log("phone number is valid");
-        // }
         generateRecaptcha();
-        signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+        if (phoneNumber.length === 14) {
+            signInWithPhoneNumber(auth, phoneNumber, appVerifier)
             .then((confirmationResult) => {
                 console.log(confirmationResult);
                 // SMS sent. Prompt user to type the code from the message, then sign the
@@ -105,7 +101,6 @@ const useChat = () => {
                 window.confirmationResult = confirmationResult;
                 setOtpSuccess(true);
                 setLoginLoader(false);
-
             }).catch((error) => {
                 console.log(error);
                 setOtpSuccess(false);
@@ -113,6 +108,9 @@ const useChat = () => {
                 // Error; SMS not sent
                 // ...
             });
+        } else {
+            setOtpSuccess(false);
+        }
     }
 
     useEffect(() => {
@@ -145,7 +143,7 @@ const useChat = () => {
         loginLoader,
         otpSuccess,
         handleLogOut,
-        sendMessage, messages, uploadPfp
+        sendMessage, messages, uploadPfp, db
     }
 };
 

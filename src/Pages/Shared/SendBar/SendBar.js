@@ -9,7 +9,7 @@ const SendBar = () => {
     // className=' w-10/12 rounded-md border-gray-300  pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-0'
     // value={message} onChange={(e) => setMessage(e.target.value)}
     return (
-        <div className='absolute bottom-5 right-0 w-full'>
+        <div className='absolute bottom-5 right-0'>
             <form className='mx-7' onSubmit={(e) => {
                 e.preventDefault();
                 console.log(message);

@@ -5,24 +5,18 @@ import { Navigate, useLocation } from 'react-router-dom';
 import useAuth from './../../Hooks/useAuth';
 
 const LoginRegister = () => {
-    const { user, createPhoneUser, pass, setPass, loginLoader, otpSuccess, verifyOTP, uploadPfp } = useAuth();
+    const { user, createPhoneUser, pass, setPass, loginLoader, verifyOTP, otpSuccess } = useAuth();
     const [phone, setPhone] = useState('');
+    const redirect = () => {
+        <Navigate
+            to={{
+                pathname: "/chats",
+                state: { from: location }
+            }}
+        />
+    }
     let location = useLocation();
-    if (user.uid) {
-        return (
-            <Navigate
-                to={{
-                    pathname: "/",
-                    state: { from: location }
-                }}
-            />)
-    }
-    let loadingButton = <div></div>;
-    if (loginLoader && !otpSuccess) {
-        loadingButton = <FiLoader className='icon icon-tabler icon-tabler-mail animate-spin absolute right-0 flex items-center p-1 mx-1 text-2xl z-10 rounded-full' width={18} height={18} />
-    } else {
-        loadingButton = <button className="absolute right-0 flex items-center p-1 mx-1 text-2xl z-10 rounded-full" onClick={() => createPhoneUser(phone)}><BsArrowRightCircle className='icon icon-tabler icon-tabler-mail' width={18} height={18} /></button>
-    }
+    if (user.uid) redirect();
     return (
         <div className="flex flex-col min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8 mt-10">
             <div className="w-full max-w-md space-t-8 mb-5">
@@ -62,12 +56,19 @@ const LoginRegister = () => {
                                 className="relative block w-full appearance-none  rounded-t-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                                 placeholder="Phone Number"
                             />
-                            {otpSuccess ? '' : <div className='absolute right-0 flex items-center p-1 mx-1 text-2xl z-10 rounded-full'>
-                                {loginLoader ? <FiLoader className='icon icon-tabler icon-tabler-mail animate-spin ' width={18} height={18} /> : <button onClick={() => createPhoneUser(phone)}><BsArrowRightCircle className='icon icon-tabler icon-tabler-mail' width={18} height={18} /></button>}</div>}
+                            <div className={`absolute right-0 flex items-center p-1 mx-1 text-2xl z-10 rounded-full`}>
+                                {loginLoader ? <FiLoader className='animate-spin' /> : ""}
+                                {loginLoader ? "" : <button className={`${otpSuccess ? "hidden" : ""}`} onClick={() => {
+                                    if (phone.startsWith("+8801")) createPhoneUser(phone)
+                                    else if (phone.startsWith("01")) createPhoneUser(`+88${phone}`)
+                                    else if (phone.startsWith("8801")) createPhoneUser(`+${phone}`);
+                                }}><BsArrowRightCircle /></button>}
+
+                            </div>
                         </div>
                     </div>
                 </form>
-                {otpSuccess ? <form onSubmit={(e) => {
+                {phone.length >= 11 ? <form onSubmit={(e) => {
                     e.preventDefault();
                 }}>
                     <div className='relative flex items-center justify-center transition delay-150 ease-in-out translate-y-5 -inset-y-5 duration-500'>
@@ -88,29 +89,20 @@ const LoginRegister = () => {
                             required
                             className=" relative  w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                             placeholder="OTP"
+
                         />
-                        {loginLoader ?
-                            <FiLoader className='icon icon-tabler icon-tabler-mail animate-spin absolute right-0 flex items-center p-1 mx-1 text-2xl z-10 rounded-full' width={18} height={18} /> : <button className='absolute right-0 flex items-center p-1 mx-1 text-2xl z-10 rounded-full' onClick={() => verifyOTP(pass).then(() => {
-                                if (user?.displayName === null) {
-                                    <Navigate
-                                        to={{
-                                            pathname: "/editprofile",
-                                            state: { from: location }
-                                        }}
-                                    />
-                                }
-                            })}><BsArrowRightCircle className='icon icon-tabler icon-tabler-mail ' width={18} height={18} /></button>}
+                        {pass.length === 6 ? <button className='absolute right-0 flex items-center p-1 mx-1 text-2xl z-10 rounded-full' onClick={() => verifyOTP(pass)}><BsArrowRightCircle className='icon icon-tabler icon-tabler-mail ' width={18} height={18} /></button> : ""}
                     </div>
                 </form> : ''}
-                <form class="flex items-center space-x-6 my-8" enctype="multipart/form-data" onSubmit={(e) => {
+                {/* <form className="flex items-center space-x-6 my-8" encType="multipart/form-data" onSubmit={(e) => {
                     e.preventDefault();
                 }}>
-                    <div class="shrink-0">
-                        <img class="h-16 w-16 object-cover rounded-full" src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1361&q=80" alt="Current profile " />
+                    <div className="shrink-0">
+                        <img className="h-16 w-16 object-cover rounded-full" src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1361&q=80" alt="Current profile " />
                     </div>
-                    <label class="block">
-                        <span class="sr-only">Choose profile photo</span>
-                        <input type="file" id='file' name='file' class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100" onChange={(e) => {
+                    <label className="block">
+                        <span className="sr-only">Choose profile photo</span>
+                        <input type="file" id='file' name='file' className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100" onChange={(e) => {
                             let file = e.target.files[0];
                             var reader = new FileReader();
                             reader.onloadend = function () {
@@ -123,7 +115,7 @@ const LoginRegister = () => {
 
                         }} />
                     </label>
-                </form>
+                </form> */}
             </div>
         </div >
 

@@ -1,86 +1,46 @@
-import React from 'react';
+import { doc, getDoc } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import useAuth from './../../Hooks/useAuth';
+import SendBar from './../Shared/SendBar/SendBar';
+
 const Chats = () => {
-    const { messages, user } = useAuth();
-    const fakemessages = [
-        {
-            message: "hi rCkqbkSaKPWnLVKztjSjAQr8tvk1rCkqbkSaKPWnLVKztjSjAQr8tvk1rCkqbkSaKPWnLVKztjSjAQr8tvk1",
-            uid: "123",
-            id: "rd"
-        },
-        {
-            message: "hello",
-            uid: "rCkqbkSaKPWnLVKztjSjAQr8tvk1",
-            id: "rd1"
-        },
-        {
-            message: "hdsfi",
-            uid: "123",
-            id: "rd2"
-        },
-        {
-            message: "01993e83843",
-            uid: "rCkqbkSaKPWnLVKztjSjAQr8tvk1",
-            id: "rd4"
-        },
-        {
-            message: "hello",
-            uid: "rCkqbkSaKPWnLVKztjSjAQr8tvk1",
-            id: "rd1das"
-        },
-        {
-            message: "hdsfi",
-            uid: "123",
-            id: "rd2as"
-        },
-        {
-            message: "01993e83843",
-            uid: "rCkqbkSaKPWnLVKztjSjAQr8tvk1",
-            id: "rd4f"
-        },
-        {
-            message: "01993e83843",
-            uid: "rCkqbkSsaKPWnLVKztjSjAQr8tvk1",
-            id: "rd4gd"
-        },
-        {
-            message: "wtf",
-            uid: "rCkqbkSaKPWnLVKztjSjAQr8tvk1",
-            id: "rd1dassa"
-        },
-        {
-            message: ";';]",
-            uid: "123",
-            id: "rd2asaw"
-        },
-        {
-            message: "1232131231",
-            uid: "rCkqbkSaKPWnLVKztjSjAQr8tvk1",
-            id: "rd4fqe"
-        },
-    ];
+    const { chatId } = useParams();
+    console.log(chatId);
+    const { messages, user, db } = useAuth();
+    const [chatCollection, setChatCollection] = useState();
+    const [userChattingWith, setUserChattingWith] = useState({});
+
+    useEffect(() => {
+        const unsubscribe = async () => {
+            const docRef = doc(db, "users", chatId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                console.log("Document data:", docSnap.data());
+                setUserChattingWith(docSnap.data());
+                setChatCollection(userChattingWith.uid + user.uid);
+                console.log(chatCollection);
+            }
+            else {
+                setUserChattingWith(null)
+                // doc.data() will be undefined in this case
+                console.log("No such user!");
+            }
+        }
+        unsubscribe();
+    }, [chatCollection, db])
     return (
-        <div className=" max-h-[38rem] overflow-y-scroll overflow-x-hidden">
-            {/* <div >
-                <header className=" bg-white shadow">
-                    <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
-                        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1>
-                    </div>
-                </header> */}
-            <div className='bottom-0 mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 '>
-                {/* <div className=""> */}
-                {messages.map((msg) => {
-                    return (
-                        <div key={msg?.id}>
-                            <div className="px-4 sm:px-0 flex justify-end">
-                                <h3 className={`${msg.uid === user.uid && "text-right bg-indigo-600 text-white"} rounded-lg my-1 py-2 px-4 w-min max-w-xs break-words ${msg.uid === !user.uid && "text-right bg-indigo-600 text-white"}`}>{msg?.message}</h3>
-                            </div>
-                        </div>
-                    )
-                })}
-                {/* </div> */}
+        <div className="">
+            {/* Remove class [ h-64 ] when adding a card block */}
+            <SendBar />
+            <div className="container mx-auto py-10 md:w-4/5 w-11/12 px-6">
+                {/* Remove class [ border-dashed border-2 border-gray-300 ] to remove dotted border */}
+                <div className="w-full h-full flex justify-center">
+                    {userChattingWith ? <div>
+                        <h4>{chatId}</h4>
+                    </div> : <h4 className='text-3xl shadow w-max'>Select a Chat to get Started</h4>}
+                </div>
             </div>
-            {/* </div> */}
         </div>
     );
 };
