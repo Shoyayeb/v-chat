@@ -6,19 +6,19 @@ import SendBar from './../Shared/SendBar/SendBar';
 
 const Chats = () => {
     const { chatId } = useParams();
-    console.log(chatId);
+
     const { messages, user, db } = useAuth();
-    const [chatCollection, setChatCollection] = useState();
+    const [chatCollection, setChatCollection] = useState('');
     const [userChattingWith, setUserChattingWith] = useState({});
 
     useEffect(() => {
         const unsubscribe = async () => {
-            const docRef = doc(db, "users", chatId);
+            const docRef = doc(db, "users", chatId.split("&")[0]);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-                console.log("Document data:", docSnap.data());
+                // console.log("Document data:", docSnap.data());
                 setUserChattingWith(docSnap.data());
-                setChatCollection(userChattingWith.uid + user.uid);
+                setChatCollection(userChattingWith.uid + "&" + user.uid);
                 console.log(chatCollection);
             }
             else {
@@ -26,13 +26,14 @@ const Chats = () => {
                 // doc.data() will be undefined in this case
                 console.log("No such user!");
             }
-        }
+        };
         unsubscribe();
-    }, [chatCollection, db])
+    }, [chatId]);
+
     return (
         <div className="">
             {/* Remove class [ h-64 ] when adding a card block */}
-            <SendBar />
+            <SendBar chatCollection={chatCollection} />
             <div className="container mx-auto py-10 md:w-4/5 w-11/12 px-6">
                 {/* Remove class [ border-dashed border-2 border-gray-300 ] to remove dotted border */}
                 <div className="w-full h-full flex justify-center">

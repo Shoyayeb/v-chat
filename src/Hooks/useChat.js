@@ -1,7 +1,7 @@
 import { getFirestore } from "@firebase/firestore";
 import axios from "axios";
 import { getAuth, onAuthStateChanged, RecaptchaVerifier, signInWithPhoneNumber, signOut } from "firebase/auth";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import initializeFirebase from './../Firebase/firebase.init';
@@ -14,20 +14,29 @@ const useChat = () => {
     const auth = getAuth();
     auth.useDeviceLanguage();
     const [user, setUser] = useState({});
+    const [users, setUsers] = useState([]);
     const [pass, setPass] = useState('');
     const [loginLoader, setLoginLoader] = useState(false);
     const [otpSuccess, setOtpSuccess] = useState(false);
     const [messages, setMessages] = useState([]);
     const chatsCollectionRef = collection(db, "chats");
 
-    const sendMessage = async (message) => {
+
+    useEffect(() => {
+        const getUsers = async () => {
+            const tempUsers = [];
+            const querySnapshot = await getDocs(collection(db, "users"));
+            querySnapshot.forEach((doc) => {
+                tempUsers.push(doc.data());
+            });
+            setUsers(tempUsers)
+        }
+        getUsers();
+    }, []);
+
+    const sendMessage = async (message, chatCollection) => {
         const time = new Date();
-        // await setDoc(chatsCollectionRef, {
-        //     message,
-        //     time,
-        //     uid: user.uid
-        // });
-        await addDoc(collection(db, "chats"), {
+        await addDoc(collection(db, chatCollection), {
             message,
             time,
             uid: user.uid,
@@ -35,7 +44,7 @@ const useChat = () => {
         socket.emit("send_message", { message, uid: user.uid });
         setMessages([...messages, { message, uid: user.uid }]);
         console.log(messages);
-    }
+    };
 
     useEffect(() => {
         socket.on("recieve_message", (data) => {
@@ -94,20 +103,20 @@ const useChat = () => {
         generateRecaptcha();
         if (phoneNumber.length === 14) {
             signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-            .then((confirmationResult) => {
-                console.log(confirmationResult);
-                // SMS sent. Prompt user to type the code from the message, then sign the
-                // user in with confirmationResult.confirm(code).
-                window.confirmationResult = confirmationResult;
-                setOtpSuccess(true);
-                setLoginLoader(false);
-            }).catch((error) => {
-                console.log(error);
-                setOtpSuccess(false);
-                setLoginLoader(false);
-                // Error; SMS not sent
-                // ...
-            });
+                .then((confirmationResult) => {
+                    console.log(confirmationResult);
+                    // SMS sent. Prompt user to type the code from the message, then sign the
+                    // user in with confirmationResult.confirm(code).
+                    window.confirmationResult = confirmationResult;
+                    setOtpSuccess(true);
+                    setLoginLoader(false);
+                }).catch((error) => {
+                    console.log(error);
+                    setOtpSuccess(false);
+                    setLoginLoader(false);
+                    // Error; SMS not sent
+                    // ...
+                });
         } else {
             setOtpSuccess(false);
         }
@@ -143,7 +152,7 @@ const useChat = () => {
         loginLoader,
         otpSuccess,
         handleLogOut,
-        sendMessage, messages, uploadPfp, db
+        sendMessage, messages, uploadPfp, db, users
     }
 };
 

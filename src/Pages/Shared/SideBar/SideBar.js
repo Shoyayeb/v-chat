@@ -1,52 +1,43 @@
 import React, { useState } from 'react';
-import { FiUser, FiUserX } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import useAuth from './../../../Hooks/useAuth';
 
 const SideBar = () => {
+    const { user, users } = useAuth();
     const [show, setShow] = useState(false);
+
     return (
         <div>
             <div className="absolute lg:relative w-64 h-screen shadow bg-gray-100 hidden lg:block">
                 <div className="h-16 w-full flex items-center px-8">
                     <h4>logo</h4>
                 </div>
-                <ul className=" py-6">
-                    <li className="pl-6 cursor-pointer hover:outline-1  hover:border-y-2 hover:border-lime-500 hover:border text-sm leading-3 tracking-normal pb-4 pt-5 text-indigo-700 focus:text-indigo-700 focus:outline-none">
-                        <Link to="/chats/notsadia" className="flex items-center">
+                {/* <li className="pl-6 cursor-pointer hover:outline-1  hover:border-y-2 hover:border-lime-500 hover:border text-sm leading-3 tracking-normal pb-4 pt-5 text-indigo-700 focus:text-indigo-700 focus:outline-none">
+                        <Link to="/chats/user1" className="flex items-center">
                             <div>
                                 <FiUserX />
                             </div>
                             <span className="ml-2">Shafin</span>
                         </Link>
-                    </li>
-                    <li className="pl-6 cursor-pointer hover:outline-1  hover:border-y-2 hover:border-lime-500 hover:border text-gray-600 text-sm leading-3 tracking-normal mt-4 mb-4 py-2 hover:text-indigo-700 focus:text-indigo-700">
-                        <Link to="/chats/sadia" className="flex items-center">
-                            <FiUser />
-                            <span className="ml-2">Not Shafin</span>
-                        </Link>
-                    </li>
-                    <li className="pl-6 cursor-pointer text-gray-600 text-sm leading-3 tracking-normal mb-4 py-2 hover:text-indigo-700 focus:text-indigo-700 focus:outline-none">
-                        <div className="flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-compass" width={20} height={20} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" />
-                                <polyline points="8 16 10 10 16 8 14 14 8 16" />
-                                <circle cx={12} cy={12} r={9} />
-                            </svg>
-                            <span className="ml-2">Performance</span>
-                        </div>
-                    </li>
-                    <li className="pl-6 cursor-pointer text-gray-600 text-sm leading-3 tracking-normal py-2 hover:text-indigo-700 focus:text-indigo-700 focus:outline-none">
-                        <div className="flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-code" width={20} height={20} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" />
-                                <polyline points="7 8 3 12 7 16" />
-                                <polyline points="17 8 21 12 17 16" />
-                                <line x1={14} y1={4} x2={10} y2={20} />
-                            </svg>
-                            <span className="ml-2">Deliverables</span>
-                        </div>
-                    </li>
-                </ul>
+                    </li> */}
+                {users ? <ul className=" py-6 bg-green-300">
+                    {
+                        users.map((doc) => {
+                            // doc.data() is never undefined for query doc snapshots
+                            // console.log(doc.data());
+                            return (
+                                <li key={user.uid} className="pl-6 cursor-pointer hover:outline-1  hover:border-y-2 hover:border-lime-500 hover:border text-sm leading-3 tracking-normal pb-4 pt-5 text-indigo-700 focus:text-indigo-700 focus:outline-none">
+                                    <Link to={`/chats/${doc.uid + "&" + user.uid}`} className="flex items-center">
+                                        <div>
+                                            <img src={`${doc.photoURL}`} width={18} height={18} alt="user" />
+                                        </div>
+                                        <span className="ml-2">{doc.name}</span>
+                                    </Link>
+                                </li>
+                            )
+                        })
+                    }
+                </ul> : "no users found"}
             </div>
             {/* mobile here */}
             <div className={show ? "w-full h-full absolute z-40  transform  translate-x-0 " : "   w-full h-full absolute z-40  transform -translate-x-full"} id="mobile-nav">

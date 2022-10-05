@@ -2,7 +2,7 @@ import { PhotoIcon } from '@heroicons/react/24/outline';
 import React, { useState } from 'react';
 import { IoSend } from "react-icons/io5";
 import useAuth from './../../../Hooks/useAuth';
-const SendBar = () => {
+const SendBar = ({ chatCollection }) => {
     const { sendMessage } = useAuth();
     const [message, setMessage] = useState('');
 
@@ -14,7 +14,7 @@ const SendBar = () => {
                 e.preventDefault();
                 console.log(message);
                 if (message) {
-                    sendMessage(message);
+                    sendMessage(message, chatCollection);
                 }
             }}>
                 <div className='relative flex'>
