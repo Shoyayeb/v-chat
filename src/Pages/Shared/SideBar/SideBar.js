@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FiUserX } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import useAuth from './../../../Hooks/useAuth';
 
@@ -12,15 +13,15 @@ const SideBar = () => {
                 <div className="h-16 w-full flex items-center px-8">
                     <h4>logo</h4>
                 </div>
-                {/* <li className="pl-6 cursor-pointer hover:outline-1  hover:border-y-2 hover:border-lime-500 hover:border text-sm leading-3 tracking-normal pb-4 pt-5 text-indigo-700 focus:text-indigo-700 focus:outline-none">
-                        <Link to="/chats/user1" className="flex items-center">
+                <li className="pl-6 cursor-pointer hover:outline-1  hover:border-y-2 hover:border-lime-500 hover:border text-sm leading-3 tracking-normal pb-4 pt-5 text-indigo-700 focus:text-indigo-700 focus:outline-none">
+                    <Link to="/chats/room" className="flex items-center">
                             <div>
                                 <FiUserX />
                             </div>
                             <span className="ml-2">Shafin</span>
                         </Link>
-                    </li> */}
-                {users ? <ul className=" py-6 bg-green-300">
+                </li>
+                {/* {users ? <ul className=" py-6 bg-green-300">
                     {
                         users.map((doc) => {
                             // doc.data() is never undefined for query doc snapshots
@@ -37,7 +38,7 @@ const SideBar = () => {
                             )
                         })
                     }
-                </ul> : "no users found"}
+                </ul> : "no users found"} */}
             </div>
             {/* mobile here */}
             <div className={show ? "w-full h-full absolute z-40  transform  translate-x-0 " : "   w-full h-full absolute z-40  transform -translate-x-full"} id="mobile-nav">

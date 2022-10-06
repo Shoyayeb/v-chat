@@ -14,44 +14,68 @@ const useChat = () => {
     const auth = getAuth();
     auth.useDeviceLanguage();
     const [user, setUser] = useState({});
-    const [users, setUsers] = useState([]);
     const [pass, setPass] = useState('');
     const [loginLoader, setLoginLoader] = useState(false);
     const [otpSuccess, setOtpSuccess] = useState(false);
     const [messages, setMessages] = useState([]);
-    const chatsCollectionRef = collection(db, "chats");
+    const [messageSent, setMessageSent] = useState(false)
 
 
     useEffect(() => {
-        const getUsers = async () => {
-            const tempUsers = [];
-            const querySnapshot = await getDocs(collection(db, "users"));
+        const getMessages = async () => {
+            const querySnapshot = await getDocs(collection(db, "chats"));
+            const allMessages = [];
             querySnapshot.forEach((doc) => {
-                tempUsers.push(doc.data());
+                const messageObject = doc.data();
+                messageObject.id = doc.id;
+                allMessages.push(messageObject);
+                // console.log(doc.id, " => ", doc.data());
+                // console.log(messageObject);
             });
-            setUsers(tempUsers)
-        }
-        getUsers();
-    }, []);
+            setMessages(allMessages);
+            console.log(messages);
+        };
+        getMessages();
+    }, [messageSent]);
 
     const sendMessage = async (message, chatCollection) => {
-        const time = new Date();
-        await addDoc(collection(db, chatCollection), {
+        // const time = new Date().toString;
+        // const chatsCollectionRef = doc(collection(db, "chats"));
+        const sentMessage = await addDoc(collection(db, "chats"), {
             message,
-            time,
-            uid: user.uid,
+            // time,
+            uid: user.uid
         });
-        socket.emit("send_message", { message, uid: user.uid });
-        setMessages([...messages, { message, uid: user.uid }]);
-        console.log(messages);
+        setMessageSent(true);
+        // setMessages([...messages, { message, uid: user.uid }]);
+        console.log(sentMessage.id);
     };
 
-    useEffect(() => {
-        socket.on("recieve_message", (data) => {
-            setMessages([...messages, { message: data.message, uid: data.uid, id: data.id }]);
-            console.log(messages);
-        });
-    }, [socket]);
+    // useEffect(() => {
+    //     const getData = async () => {
+    //         const docRef = doc(db, "chats");
+    //         const docSnap = await getDoc(docRef);
+    //         if (docSnap.exists()) {
+    //             const msg = docSnap.data();
+    //             setMessages(msg.message);
+    //             console.log("Document data:", docSnap.data());
+    //         } else {
+    //             // doc.data() will be undefined in this case
+    //             console.log("No such document!");
+    //         }
+    //     }
+    //     getData();
+    // }, [messages]);
+
+
+
+
+
+
+
+
+
+
 
     let appVerifier = window.recaptchaVerifier;
 
@@ -152,7 +176,7 @@ const useChat = () => {
         loginLoader,
         otpSuccess,
         handleLogOut,
-        sendMessage, messages, uploadPfp, db, users
+        sendMessage, messages, uploadPfp, db
     }
 };
 
