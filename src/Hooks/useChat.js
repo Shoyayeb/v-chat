@@ -67,6 +67,9 @@ const useChat = () => {
       .then((res) => {
         getMessages();
         socket.emit("send_message", { message });
+        const inputElement = document.getElementById("messageInput");
+        inputElement.value = "";
+        window.scrollTo(0, document.body.scrollHeight);
       })
       .catch((err) => {
         console.log(err);

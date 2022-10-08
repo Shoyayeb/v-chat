@@ -27,6 +27,7 @@ const SendBar = ({ chatCollection }) => {
               }}
               type="text"
               className="text-gray-600 focus:outline-none focus:border focus:border-indigo-700  bg-white font-normal h-10 flex items-center pl-12 text-sm  border shadow w-5/6 rounded-md border-gray-300  pr-16  focus:ring-indigo-500 sm:text-sm py-0"
+              id="messageInput"
               placeholder="Enter Your Message "
             />
             <label className="absolute left-0 text-gray-600 flex items-center px-4 border-l h-full cursor-pointer">
