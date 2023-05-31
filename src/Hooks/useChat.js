@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import initializeFirebase from './../Firebase/firebase.init';
 
-const socket = io.connect("http://localhost:4000");
+const socket = io.connect("https://v-chat-8wr1.onrender.com");
 initializeFirebase();
 
 const useChat = () => {
